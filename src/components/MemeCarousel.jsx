@@ -1,52 +1,28 @@
-import { API_URL } from "../config";
+import React from "react";
 
 export default function MemeCarousel({ memes, onMemeClick }) {
-  if (!memes.length) return null;
+  if (!memes || memes.length === 0) return null;
 
   return (
-    <div className="w-full mt-10">
-      <div
-        className="
-          flex
-          gap-4
-          overflow-x-auto
-          pb-2
-          snap-x
-          snap-mandatory
-          scrollbar-hide
-        "
-      >
+    <div className="w-full mt-8">
+      <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
         {memes.map((meme) => (
           <div
             key={meme._id}
             onClick={() => onMemeClick(meme)}
-            className="
-              flex-shrink-0
-              w-60
-              h-36
-              rounded-xl
-              overflow-hidden
-              cursor-pointer
-              border
-              border-gray-800
-              hover:border-yellow-400
-              transition-all
-              duration-300
-              snap-start
-            "
+            className="flex-shrink-0 w-48 cursor-pointer group"
           >
-            <img
-              src={`${API_URL}${meme.imageUrl}`}
-              alt={meme.title}
-              className="
-                w-full
-                h-full
-                object-cover
-                hover:scale-105
-                transition-transform
-                duration-300
-              "
-            />
+            <div className="overflow-hidden rounded-2xl border border-gray-800 hover:border-yellow-400 transition-all duration-300">
+              <img
+                src={`http://144.24.81.60:5000${meme.imageUrl}`}
+                alt={meme.title}
+                className="w-full h-28 object-cover group-hover:scale-105 transition duration-300"
+              />
+            </div>
+
+            <p className="mt-2 text-sm text-gray-300 truncate group-hover:text-yellow-400 transition-colors">
+              {meme.title}
+            </p>
           </div>
         ))}
       </div>
