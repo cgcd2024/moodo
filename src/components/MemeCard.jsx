@@ -13,7 +13,7 @@ export default function MemeCard({ meme, onClick }) {
       {/* 썸네일 */}
       <div className="relative aspect-[4/3] overflow-hidden bg-black/50">
         <img 
-          src={`http://localhost:5000${meme.imageUrl}`}
+          src={`http://144.24.81.60:5000${meme.imageUrl}`}
           alt={meme.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
         />

@@ -4,6 +4,7 @@ import React, {
     useEffect
 } from "react";
 
+import MemeCarousel from "./components/MemeCarousel";
 import axios from "axios";
 //import { initialMemes } from "./data/memes";
 import MemeModal from "./components/MemeModal";
@@ -14,7 +15,7 @@ import SearchBar from "./components/SearchBar";
 
 export default function MudoApp() {
   useEffect(() => {
-    axios.get("http://localhost:5000/api/posts")
+    axios.get("http://144.24.81.60:5000/api/posts")
         .then(res => {
             setMemes(res.data);
         })
@@ -76,26 +77,33 @@ export default function MudoApp() {
         {/* 결과 표시 영역 */}
         <div className="w-full">
           {!hasSearched ? (
-            <TodayMeme 
-              meme={todayMeme} 
-              onClick={() => setSelectedMeme(todayMeme)} 
-            />
+            <>
+              <TodayMeme
+                meme={todayMeme}
+                onClick={() => setSelectedMeme(todayMeme)}
+              />
+
+              <MemeCarousel
+                memes={memes}
+                onMemeClick={setSelectedMeme}
+              />
+            </>
           ) : (
             <div className="animate-fade-in">
               <div className="mb-8 flex items-center justify-between">
                 <h3 className="text-2xl font-bold text-white">
                   "<span className="text-yellow-400">{searchTerm}</span>" 검색 결과
                 </h3>
+
                 <span className="px-3 py-1 rounded-full bg-gray-800 text-gray-300 text-sm font-semibold border border-gray-700">
                   {filteredMemes.length}건
                 </span>
               </div>
 
-              <MemeGrid 
-                memes={filteredMemes} 
-                onMemeClick={setSelectedMeme} 
+              <MemeGrid
+                memes={filteredMemes}
+                onMemeClick={setSelectedMeme}
               />
-              
             </div>
           )}
         </div>

@@ -21,7 +21,7 @@ export default function TodayMeme({ meme, onClick }) {
         <div className="relative aspect-video bg-black overflow-hidden">
           {/* 하드코딩되었던 주소 대신 전달받은 데이터의 URL을 사용합니다 */}
           <img 
-            src={`http://localhost:5000${meme.imageUrl}`}
+            src={`http://144.24.81.60:5000${meme.imageUrl}`}
             alt={meme.title}
             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
           />

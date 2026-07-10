@@ -19,7 +19,7 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   const handleVote = async (type) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/posts/${meme._id}/vote`,
+        `http://144.24.81.60:5000/api/posts/${meme._id}/vote`,
         {
           type,
         }
@@ -39,7 +39,7 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/posts/${meme._id}/comments`,
+        `http://144.24.81.60:5000/api/posts/${meme._id}/comments`,
         {
           author: "익명",
           content: newComment,
@@ -58,7 +58,7 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   const handleLikeComment = async (commentId) => {
   try {
     const res = await axios.post(
-      `http://localhost:5000/api/posts/${meme._id}/comments/${commentId}/like`
+      `http://144.24.81.60:5000/api/posts/${meme._id}/comments/${commentId}/like`
     );
 
     onUpdateMeme(res.data);
@@ -87,7 +87,7 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
         <div className="p-4 sm:p-6 space-y-6">
           {/* 이미지 및 설명 */}
           <div className="space-y-4">
-            <img src={`http://localhost:5000${meme.imageUrl}`} alt={meme.title} className="w-full h-auto rounded-lg object-contain bg-black max-h-[600px]" />
+            <img src={`http://144.24.81.60:5000${meme.imageUrl}`} alt={meme.title} className="w-full h-auto rounded-lg object-contain bg-black max-h-[600px]" />
             <p className="text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap">{meme.description}</p>
           </div>
 
