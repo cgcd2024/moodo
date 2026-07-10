@@ -1,4 +1,3 @@
-import React from 'react';
 import MemeCard from './MemeCard';
 
 export default function MemeGrid({ memes, onMemeClick }) {
@@ -13,14 +12,13 @@ export default function MemeGrid({ memes, onMemeClick }) {
     );
   }
 
-  // 검색 결과가 있을 때 보여줄 그리드 UI
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {memes.map((meme) => (
-        <MemeCard 
-          key={meme.id} 
-          meme={meme} 
-          onClick={() => onMemeClick(meme)} 
+        <MemeCard
+          key={meme._id}
+          meme={meme}
+          onClick={() => onMemeClick(meme)}
         />
       ))}
     </div>

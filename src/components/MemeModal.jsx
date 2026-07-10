@@ -1,14 +1,44 @@
-import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api, imageUrl } from "../lib/api";
 import CloseIcon from "./icons/CloseIcon";
 import UserIcon from "./icons/UserIcon";
 import SendIcon from "./icons/SendIcon";
 import TrendingUpIcon from "./icons/TrendingUpIcon";
 import TrendingDownIcon from "./icons/TrendingDownIcon";
 
+// createdAt을 "N분 전" 형태로 변환
+function timeAgo(dateStr) {
+  if (!dateStr) return "";
+  const diffMin = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000);
+  if (diffMin < 1) return "방금 전";
+  if (diffMin < 60) return `${diffMin}분 전`;
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffHour < 24) return `${diffHour}시간 전`;
+  const diffDay = Math.floor(diffHour / 24);
+  if (diffDay < 30) return `${diffDay}일 전`;
+  return new Date(dateStr).toLocaleDateString("ko-KR");
+}
+
 const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   const [newComment, setNewComment] = useState('');
-  const [hasVoted, setHasVoted] = useState(null); // 'up', 'down', null
+  // 투표 여부를 localStorage에 기록해 재투표 방지
+  const [hasVoted, setHasVoted] = useState(() =>
+    localStorage.getItem(`moodo-voted-${meme?._id}`)
+  );
+
+  // Esc로 닫기 + 모달이 떠 있는 동안 배경 스크롤 잠금
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
 
   if (!meme) return null;
 
@@ -17,14 +47,13 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   const downvotePercent = totalVotes === 0 ? 0 : Math.round((meme.downvotes / totalVotes) * 100);
 
   const handleVote = async (type) => {
-    try {
-      const res = await axios.post(
-        `http://144.24.81.60:5000/api/posts/${meme._id}/vote`,
-        {
-          type,
-        }
-      );
+    if (hasVoted) return;
 
+    try {
+      const res = await api.post(`/posts/${meme._id}/vote`, { type });
+
+      localStorage.setItem(`moodo-voted-${meme._id}`, type);
+      setHasVoted(type);
       onUpdateMeme(res.data);
 
     } catch (err) {
@@ -38,16 +67,12 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
     if (!newComment.trim()) return;
 
     try {
-      const res = await axios.post(
-        `http://144.24.81.60:5000/api/posts/${meme._id}/comments`,
-        {
-          author: "익명",
-          content: newComment,
-        }
-      );
+      const res = await api.post(`/posts/${meme._id}/comments`, {
+        author: "익명",
+        content: newComment,
+      });
 
       onUpdateMeme(res.data);
-
       setNewComment("");
 
     } catch (err) {
@@ -56,22 +81,20 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   };
 
   const handleLikeComment = async (commentId) => {
-  try {
-    const res = await axios.post(
-      `http://144.24.81.60:5000/api/posts/${meme._id}/comments/${commentId}/like`
-    );
+    try {
+      const res = await api.post(`/posts/${meme._id}/comments/${commentId}/like`);
 
-    onUpdateMeme(res.data);
+      onUpdateMeme(res.data);
 
-  } catch (err) {
-    console.error(err);
-  }
-};
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
       {/* 모달 컨테이너 - 클릭 이벤트 버블링 방지 */}
-      <div 
+      <div
         className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#1e1e24] text-gray-200 rounded-xl shadow-2xl flex flex-col hide-scrollbar border border-gray-700"
         onClick={(e) => e.stopPropagation()}
       >
@@ -87,40 +110,45 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
         <div className="p-4 sm:p-6 space-y-6">
           {/* 이미지 및 설명 */}
           <div className="space-y-4">
-            <img src={`http://144.24.81.60:5000${meme.imageUrl}`} alt={meme.title} className="w-full h-auto rounded-lg object-contain bg-black max-h-[600px]" />
+            <img src={imageUrl(meme.imageUrl)} alt={meme.title} className="w-full h-auto rounded-lg object-contain bg-black max-h-[600px]" />
             <p className="text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap">{meme.description}</p>
           </div>
 
-          {/* 평가 섹션 (첨부 이미지 스타일 반영) */}
+          {/* 평가 섹션 */}
           <div className="pt-6 border-t border-gray-700">
-            <h3 className="text-lg font-bold text-white mb-4">이 짤은 어떠셨나요?</h3>
+            <div className="flex items-baseline justify-between mb-4">
+              <h3 className="text-lg font-bold text-white">이 짤은 어떠셨나요?</h3>
+              {hasVoted && <span className="text-xs text-gray-500">투표 완료 ✓</span>}
+            </div>
             <div className="grid grid-cols-2 gap-4">
               {/* 긍정적 버튼 */}
-              <button 
+              <button
                 onClick={() => handleVote('up')}
+                disabled={!!hasVoted}
                 className={`flex flex-col items-center justify-center p-6 rounded-xl transition-all duration-200 ${
-                  hasVoted === 'up' ? 'bg-[#1a2e25] border border-green-500' : 'bg-[#141418] hover:bg-[#1a1a20] border border-transparent'
-                }`}
+                  hasVoted === 'up' ? 'bg-[#1a2e25] border border-green-500' : 'bg-[#141418] border border-transparent'
+                } ${hasVoted ? 'cursor-default' : 'hover:bg-[#1a1a20] cursor-pointer'} ${hasVoted && hasVoted !== 'up' ? 'opacity-40' : ''}`}
               >
                 <div className={`p-3 rounded-full mb-3 ${hasVoted === 'up' ? 'bg-green-500/20 text-green-400' : 'bg-green-500/10 text-green-500'}`}>
                   <TrendingUpIcon />
                 </div>
                 <span className="text-green-500 font-bold mb-1">긍정적</span>
-                <span className="text-green-400 text-sm font-semibold">{upvotePercent}%</span>
+                <span className="text-green-400 text-sm font-semibold">{upvotePercent}% · {meme.upvotes}표</span>
               </button>
 
               {/* 부정적 버튼 */}
-              <button 
+              <button
                 onClick={() => handleVote('down')}
+                disabled={!!hasVoted}
                 className={`flex flex-col items-center justify-center p-6 rounded-xl transition-all duration-200 ${
-                  hasVoted === 'down' ? 'bg-[#3a1c22] border border-pink-500' : 'bg-[#141418] hover:bg-[#1a1a20] border border-transparent'
-                }`}
+                  hasVoted === 'down' ? 'bg-[#3a1c22] border border-pink-500' : 'bg-[#141418] border border-transparent'
+                } ${hasVoted ? 'cursor-default' : 'hover:bg-[#1a1a20] cursor-pointer'} ${hasVoted && hasVoted !== 'down' ? 'opacity-40' : ''}`}
               >
                 <div className={`p-3 rounded-full mb-3 ${hasVoted === 'down' ? 'bg-pink-500/20 text-pink-400' : 'bg-pink-500/10 text-pink-500'}`}>
                   <TrendingDownIcon />
                 </div>
                 <span className="text-pink-500 font-bold mb-1">부정적</span>
-                <span className="text-pink-400 text-sm font-semibold">{downvotePercent}%</span>
+                <span className="text-pink-400 text-sm font-semibold">{downvotePercent}% · {meme.downvotes}표</span>
               </button>
             </div>
           </div>
@@ -128,9 +156,9 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
           {/* 댓글 섹션 */}
           <div className="pt-6 border-t border-gray-700">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-white">댓글 <span className="text-indigo-400">{meme.comments.length}개</span></h3>
+              <h3 className="text-base font-bold text-white">댓글 <span className="text-yellow-400">{meme.comments.length}개</span></h3>
             </div>
-            
+
             {/* 댓글 목록 */}
             <div className="space-y-4 mb-6 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
               {meme.comments.length === 0 ? (
@@ -138,19 +166,19 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
               ) : (
                 meme.comments.map(comment => (
                   <div key={comment._id} className="flex gap-3">
-                    <div className="flex-shrink-0 w-8 h-8 bg-indigo-900/50 rounded-full flex items-center justify-center text-indigo-300">
+                    <div className="flex-shrink-0 w-8 h-8 bg-yellow-400/10 rounded-full flex items-center justify-center text-yellow-400">
                       <UserIcon />
                     </div>
                     <div>
                       <div className="flex items-baseline gap-2">
                         <span className="font-semibold text-gray-200 text-sm">{comment.author}</span>
-                        <span className="text-xs text-gray-500">{comment.timestamp}</span>
+                        <span className="text-xs text-gray-500">{timeAgo(comment.createdAt)}</span>
                       </div>
                       <p className="text-gray-300 text-sm mt-1">{comment.content}</p>
                       <div className="mt-2">
                         <button
                           onClick={() => handleLikeComment(comment._id)}
-                          className="text-sm text-indigo-400 hover:text-indigo-300"
+                          className="text-sm text-gray-400 hover:text-yellow-400 transition-colors"
                         >
                           👍 {comment.likeCount}
                         </button>
@@ -175,12 +203,12 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="댓글을 입력해 보세요..."
-                className="w-full bg-[#141418] text-gray-200 text-sm md:text-base rounded-full py-3 pl-4 pr-12 focus:outline-none focus:ring-1 focus:ring-indigo-500 border border-gray-800"
+                className="w-full bg-[#141418] text-gray-200 text-sm md:text-base rounded-full py-3 pl-4 pr-12 focus:outline-none focus:ring-1 focus:ring-yellow-400 border border-gray-800"
               />
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={!newComment.trim()}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-full transition-colors flex items-center justify-center"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-yellow-400 hover:bg-yellow-300 disabled:bg-gray-700 disabled:text-gray-500 text-black rounded-full transition-colors flex items-center justify-center"
               >
                 <SendIcon />
               </button>
