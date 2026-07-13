@@ -25,6 +25,14 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   const [hasVoted, setHasVoted] = useState(() =>
     localStorage.getItem(`moodo-voted-${meme?._id}`)
   );
+  // 댓글 좋아요도 댓글당 1회로 제한
+  const [likedComments, setLikedComments] = useState(() => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(`moodo-comment-likes-${meme?._id}`) ?? "[]"));
+    } catch {
+      return new Set();
+    }
+  });
 
   // Esc로 닫기 + 모달이 떠 있는 동안 배경 스크롤 잠금
   useEffect(() => {
@@ -67,8 +75,8 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
     if (!newComment.trim()) return;
 
     try {
+      // author를 보내지 않으면 서버가 랜덤 닉네임을 생성한다
       const res = await api.post(`/posts/${meme._id}/comments`, {
-        author: "익명",
         content: newComment,
       });
 
@@ -81,8 +89,14 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   };
 
   const handleLikeComment = async (commentId) => {
+    if (likedComments.has(commentId)) return;
+
     try {
       const res = await api.post(`/posts/${meme._id}/comments/${commentId}/like`);
+
+      const next = new Set(likedComments).add(commentId);
+      setLikedComments(next);
+      localStorage.setItem(`moodo-comment-likes-${meme._id}`, JSON.stringify([...next]));
 
       onUpdateMeme(res.data);
 
@@ -178,7 +192,12 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
                       <div className="mt-2">
                         <button
                           onClick={() => handleLikeComment(comment._id)}
-                          className="text-sm text-gray-400 hover:text-yellow-400 transition-colors"
+                          disabled={likedComments.has(comment._id)}
+                          className={`text-sm transition-colors ${
+                            likedComments.has(comment._id)
+                              ? "text-yellow-400 cursor-default"
+                              : "text-gray-400 hover:text-yellow-400"
+                          }`}
                         >
                           추천 {comment.likeCount}
                         </button>

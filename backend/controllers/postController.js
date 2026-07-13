@@ -3,6 +3,8 @@ import path from "path";
 
 import Post from "../models/Post.js";
 import { uploadDir } from "../middleware/upload.js";
+import { saveAsWebp } from "../utils/image.js";
+import { randomNickname } from "../utils/nickname.js";
 
 // 게시글 생성 (이미지 업로드 포함)
 export const createPost = async (req, res) => {
@@ -21,10 +23,13 @@ export const createPost = async (req, res) => {
       });
     }
 
+    // 업로드된 이미지를 WebP로 변환해 저장
+    const filename = await saveAsWebp(req.file, uploadDir);
+
     const post = await Post.create({
       title: title.trim(),
       description,
-      imageUrl: `/uploads/${req.file.filename}`,
+      imageUrl: `/uploads/${filename}`,
     });
 
     res.status(201).json(post);
@@ -130,8 +135,11 @@ export const addComment = async (req, res) => {
       });
     }
 
+    // 작성자 미지정 시 "상황 + 닉네임" 랜덤 조합으로 생성
+    const trimmed = author?.trim();
+
     post.comments.push({
-      author: author || "익명",
+      author: trimmed && trimmed !== "익명" ? trimmed : randomNickname(),
       content,
     });
 

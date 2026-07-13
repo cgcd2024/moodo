@@ -41,8 +41,8 @@ export default function AdminApp() {
   // 파일 선택/드롭 공통 처리
   const acceptFile = (f) => {
     if (!f) return;
-    if (!f.type.startsWith("image/")) {
-      setMessage({ type: "error", text: "이미지 파일만 업로드할 수 있습니다." });
+    if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(f.type)) {
+      setMessage({ type: "error", text: "JPEG, PNG, WebP, GIF 이미지만 업로드할 수 있습니다." });
       return;
     }
     if (f.size > 10 * 1024 * 1024) {
@@ -202,7 +202,7 @@ export default function AdminApp() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp,image/gif"
                 className="hidden"
                 onChange={(e) => acceptFile(e.target.files?.[0])}
               />
