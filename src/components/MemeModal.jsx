@@ -118,7 +118,7 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
           <div className="pt-6 border-t border-gray-700">
             <div className="flex items-baseline justify-between mb-4">
               <h3 className="text-lg font-bold text-white">이 짤은 어떠셨나요?</h3>
-              {hasVoted && <span className="text-xs text-gray-500">투표 완료 ✓</span>}
+              {hasVoted && <span className="text-xs text-gray-500">투표 완료</span>}
             </div>
             <div className="grid grid-cols-2 gap-4">
               {/* 긍정적 버튼 */}
@@ -180,7 +180,7 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
                           onClick={() => handleLikeComment(comment._id)}
                           className="text-sm text-gray-400 hover:text-yellow-400 transition-colors"
                         >
-                          👍 {comment.likeCount}
+                          추천 {comment.likeCount}
                         </button>
                       </div>
                     </div>

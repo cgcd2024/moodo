@@ -27,7 +27,6 @@ function GridSkeleton() {
 function ErrorPanel({ onRetry }) {
   return (
     <div className="text-center py-20 bg-[#1c1c21] rounded-3xl border border-gray-800 border-dashed">
-      <div className="text-6xl mb-4">😵</div>
       <p className="text-xl text-gray-300 font-medium">짤 서버가 잠시 쉬는 중이에요</p>
       <p className="text-sm text-gray-500 mt-2">네트워크 상태를 확인하고 다시 시도해주세요.</p>
       <button
@@ -158,7 +157,7 @@ export default function MudoApp() {
 
       <footer className="relative w-full border-t border-gray-800/60 py-8 mt-auto">
         <p className="text-center text-sm text-gray-600">
-          무도짤 저장소 — 무한도전의 레전드 순간들을 한곳에 🏃
+          무도짤 저장소 — 무한도전의 레전드 순간들을 한곳에
         </p>
       </footer>
 

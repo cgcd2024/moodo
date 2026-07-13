@@ -13,7 +13,7 @@ export default function MemeCarousel({ memes, onMemeClick }) {
   return (
     <section className="w-full">
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-xl md:text-2xl font-bold text-white">🔥 지금 인기있는 짤</h3>
+        <h3 className="text-xl md:text-2xl font-bold text-white">지금 인기있는 짤</h3>
 
         <div className="flex gap-2">
           <button
@@ -55,7 +55,7 @@ export default function MemeCarousel({ memes, onMemeClick }) {
             <p className="mt-2 text-sm text-gray-300 truncate group-hover:text-yellow-400 transition-colors font-medium">
               {meme.title}
             </p>
-            <p className="text-xs text-gray-500">👍 {meme.upvotes}</p>
+            <p className="text-xs text-gray-500">추천 {meme.upvotes}</p>
           </div>
         ))}
       </div>

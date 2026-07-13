@@ -24,7 +24,7 @@ export default function TodayMeme({ meme, onClick }) {
 
         {/* 뱃지 */}
         <div className="absolute top-5 left-5 px-4 py-1.5 rounded-full bg-yellow-400 text-black text-sm font-black shadow-lg">
-          ⭐ 오늘의 무도짤
+          오늘의 무도짤
         </div>
 
         {/* 텍스트 오버레이 */}
