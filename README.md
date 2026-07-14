@@ -14,3 +14,20 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+
+
+TODO
+관리자페이지
+-짤 아래에 tags 추가 (db 추가 완료)
+ 검색 인덱스용으로 실제 post에는 표기 X  
+(ex - 명수옹, 화남, 일하기 싫을때 쓰는 ... etc)
+
+UXUI
+-게시글 수려한 폰트적용
+-mobile 댓글 input focus 수정
+
+
+
++) 3000포트 http 기본포트로 교체 / 도메인 구매 / ssl 인증서 적용
