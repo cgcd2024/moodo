@@ -86,7 +86,8 @@ export default function MudoApp() {
     return memes.filter(
       (meme) =>
         meme.title.toLowerCase().includes(lowercasedTerm) ||
-        meme.description.toLowerCase().includes(lowercasedTerm)
+        meme.description.toLowerCase().includes(lowercasedTerm) ||
+        (meme.tags ?? "").toLowerCase().includes(lowercasedTerm)
     );
   }, [memes, searchTerm]);
 

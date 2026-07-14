@@ -106,10 +106,10 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
-      {/* 모달 컨테이너 - 클릭 이벤트 버블링 방지 */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+      {/* 모달 컨테이너 - 클릭 이벤트 버블링 방지, 모바일에서는 전체 화면 */}
       <div
-        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#1e1e24] text-gray-200 rounded-xl shadow-2xl flex flex-col hide-scrollbar border border-gray-700"
+        className="relative w-full max-w-3xl h-full sm:h-auto max-h-[100dvh] sm:max-h-[90vh] overflow-y-auto bg-[#1e1e24] text-gray-200 rounded-none sm:rounded-xl shadow-2xl flex flex-col hide-scrollbar border-0 sm:border border-gray-700"
         onClick={(e) => e.stopPropagation()}
       >
         {/* 헤더 */}
@@ -222,7 +222,7 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="댓글을 입력해 보세요..."
-                className="w-full bg-[#141418] text-gray-200 text-sm md:text-base rounded-full py-3 pl-4 pr-12 focus:outline-none focus:ring-1 focus:ring-yellow-400 border border-gray-800"
+                className="w-full bg-[#141418] text-gray-200 text-base rounded-full py-3 pl-4 pr-12 focus:outline-none focus:ring-1 focus:ring-yellow-400 border border-gray-800"
               />
               <button
                 type="submit"

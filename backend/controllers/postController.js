@@ -9,7 +9,7 @@ import { randomNickname } from "../utils/nickname.js";
 // 게시글 생성 (이미지 업로드 포함)
 export const createPost = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, tags } = req.body;
 
     if (!title?.trim() || !description?.trim()) {
       return res.status(400).json({
@@ -29,6 +29,7 @@ export const createPost = async (req, res) => {
     const post = await Post.create({
       title: title.trim(),
       description,
+      tags: tags?.trim() ?? "",
       imageUrl: `/uploads/${filename}`,
     });
 
@@ -38,6 +39,43 @@ export const createPost = async (req, res) => {
 
     res.status(500).json({
       message: "게시글 생성 실패",
+    });
+  }
+};
+
+// 게시글 수정 (제목, 설명, 태그)
+export const updatePost = async (req, res) => {
+  try {
+    const { title, description, tags } = req.body;
+
+    if (!title?.trim() || !description?.trim()) {
+      return res.status(400).json({
+        message: "제목과 설명을 모두 입력해주세요.",
+      });
+    }
+
+    const post = await Post.findByIdAndUpdate(
+      req.params.id,
+      {
+        title: title.trim(),
+        description,
+        tags: tags?.trim() ?? "",
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!post) {
+      return res.status(404).json({
+        message: "게시글을 찾을 수 없습니다.",
+      });
+    }
+
+    res.status(200).json(post);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "게시글 수정 실패",
     });
   }
 };
