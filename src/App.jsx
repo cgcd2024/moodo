@@ -136,7 +136,13 @@ export default function MudoApp() {
       />
 
       <main className="relative w-full max-w-5xl px-4 flex flex-col items-center flex-grow pt-6 pb-16">
-        <SearchBar value={searchTerm} onChange={handleSearchChange} hasSearched={hasSearched} />
+        <SearchBar
+          value={searchTerm}
+          onChange={handleSearchChange}
+          hasSearched={hasSearched}
+          suggestions={filteredMemes}
+          onSelectSuggestion={setSelectedMeme}
+        />
 
         <div className="w-full">
           {loading ? (
