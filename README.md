@@ -52,9 +52,10 @@ cd backend && npm install    # multer, sharp 설치
 - [ ] 관리자 인증 (현재 #/admin은 주소만 알면 접근 가능)
 - [ ] 짤 크롤링 수집
 
-UXUI
-- [x] 게시글 수려한 폰트 적용 — Pretendard
+사용자페이지
+- [x] 게시글 수려한 폰트 적용 — Pretendard 적용 (대안 후보: [Freesentation](https://freesentation.blog/freesentation))
 - [x] mobile 댓글 input focus 수정 — input 16px 고정 (iOS 포커스 줌 방지), 모달 모바일 전체화면(dvh)
+- [ ] 게시물 상단 이미지 복사 or 공유 (카카오톡, 인스타DM, URL로 복사하기)
 
 인프라
-- [ ] 3000포트 http 기본포트로 교체 / 도메인 구매 / SSL 인증서 적용
+- [ ] 3000포트 http 기본포트(80)로 교체 / 도메인 구매 / SSL 인증서 적용
