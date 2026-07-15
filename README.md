@@ -80,5 +80,5 @@ sudo certbot --nginx -d muhaha.kr
 - [x] MongoDB text 인덱스 교체 — `db.posts.dropIndex("title_text_description_text")` 후 백엔드 재시작
 - [x] SSL 인증서 적용 — `sudo certbot --nginx -d muhaha.kr` (적용 시 모바일 공유 시트 자동 활성화)
 - [ ] 카카오 개발자 앱 생성 + JavaScript 키 발급 — 카카오톡 전용 공유 버튼용
-- [ ] 구글,네이버 검색 엔진 등록 // 메타테그 추가
-- [ ] Open Graph 등록
+- [x] 구글,네이버 검색 엔진 등록 // 메타테그 추가
+- [x] Open Graph 등록
