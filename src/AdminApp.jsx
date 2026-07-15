@@ -2,6 +2,75 @@ import { useState, useEffect, useCallback } from "react";
 import { api, imageUrl } from "./lib/api";
 import PostFormModal from "./components/PostFormModal";
 
+// 관리자 로그인 게이트
+function AdminLoginGate({ onLogin }) {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!password.trim()) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await api.post("/admin/login", { password });
+      onLogin(password);
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.status === 401
+          ? "비밀번호가 올바르지 않습니다."
+          : "로그인에 실패했습니다. 서버에 인증 API가 배포되어 있는지 확인해주세요."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0f0f13] text-gray-200 font-sans flex items-center justify-center px-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-sm bg-[#1c1c21] rounded-2xl border border-gray-800 p-8 space-y-5">
+        <div className="text-center">
+          <h1 className="text-xl font-black text-white">
+            무도<span className="text-yellow-400">짤</span> 관리자
+          </h1>
+          <p className="text-sm text-gray-500 mt-2">관리자 비밀번호를 입력해주세요.</p>
+        </div>
+
+        {error && (
+          <div className="px-4 py-3 rounded-xl text-sm font-medium bg-red-500/10 text-red-400 border border-red-500/30">
+            {error}
+          </div>
+        )}
+
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="비밀번호"
+          autoFocus
+          className="w-full bg-[#141418] text-gray-100 text-base rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-yellow-400/80 border border-gray-700/60 placeholder-gray-600"
+        />
+
+        <button
+          type="submit"
+          disabled={loading || !password.trim()}
+          className="w-full py-3 rounded-xl bg-yellow-400 hover:bg-yellow-300 disabled:bg-gray-700 disabled:text-gray-500 text-black font-bold transition-colors"
+        >
+          {loading ? "확인 중..." : "로그인"}
+        </button>
+
+        <a href="#/" className="block text-center text-sm text-gray-500 hover:text-yellow-400 transition-colors">
+          사이트로 돌아가기
+        </a>
+      </form>
+    </div>
+  );
+}
+
 function formatDate(dateStr) {
   if (!dateStr) return "-";
   return new Date(dateStr).toLocaleDateString("ko-KR", {
@@ -12,6 +81,7 @@ function formatDate(dateStr) {
 }
 
 export default function AdminApp() {
+  const [adminKey, setAdminKey] = useState(() => sessionStorage.getItem("moodo-admin-key"));
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null); // { type: 'success' | 'error', text }
@@ -44,6 +114,16 @@ export default function AdminApp() {
     setModal(null);
   };
 
+  const handleLogin = (password) => {
+    sessionStorage.setItem("moodo-admin-key", password);
+    setAdminKey(password);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("moodo-admin-key");
+    setAdminKey(null);
+  };
+
   const handleDelete = async (post) => {
     if (!window.confirm(`"${post.title}" 게시글을 삭제할까요?\n삭제하면 되돌릴 수 없습니다.`)) return;
 
@@ -53,12 +133,23 @@ export default function AdminApp() {
       setMessage({ type: "success", text: `"${post.title}" 삭제 완료` });
     } catch (err) {
       console.error(err);
+
+      // 인증 만료/무효 → 다시 로그인
+      if (err.response?.status === 401) {
+        handleLogout();
+        return;
+      }
+
       const text =
         err.response?.data?.message ??
         "삭제에 실패했습니다. 서버에 삭제 API가 배포되어 있는지 확인해주세요.";
       setMessage({ type: "error", text });
     }
   };
+
+  if (!adminKey) {
+    return <AdminLoginGate onLogin={handleLogin} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0f0f13] text-gray-200 font-sans">
@@ -74,9 +165,17 @@ export default function AdminApp() {
             </span>
           </div>
 
-          <a href="#/" className="text-sm text-gray-400 hover:text-yellow-400 transition-colors font-medium">
-            ← 사이트로 돌아가기
-          </a>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleLogout}
+              className="text-sm text-gray-500 hover:text-red-400 transition-colors font-medium"
+            >
+              로그아웃
+            </button>
+            <a href="#/" className="text-sm text-gray-400 hover:text-yellow-400 transition-colors font-medium">
+              ← 사이트로 돌아가기
+            </a>
+          </div>
         </div>
       </header>
 

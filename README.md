@@ -64,7 +64,7 @@ sudo certbot --nginx -d muhaha.kr
 
 관리자페이지
 - [x] 짤 아래에 tags 추가 (검색 인덱스용, 게시글에는 표기 X) — 모델/관리자 폼/검색 반영 완료
-- [ ] 관리자 인증 (현재 #/admin은 주소만 알면 접근 가능)
+- [x] 관리자 인증 — 비밀번호 로그인(sessionStorage 유지), 등록/수정/삭제 API는 백엔드에서 x-admin-key 검증. 비밀번호는 backend/.env의 ADMIN_KEY로 변경 가능
 - [ ] 짤 크롤링 수집
 
 사용자페이지

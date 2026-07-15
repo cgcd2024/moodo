@@ -9,5 +9,12 @@ export const api = axios.create({
   baseURL: `${API_BASE}/api`,
 });
 
+// 관리자 로그인 상태면 모든 요청에 인증 키를 자동 첨부
+api.interceptors.request.use((config) => {
+  const adminKey = sessionStorage.getItem("moodo-admin-key");
+  if (adminKey) config.headers["x-admin-key"] = adminKey;
+  return config;
+});
+
 // 서버가 "/uploads/..." 형태의 상대 경로를 내려주므로 절대 URL로 변환
 export const imageUrl = (path) => `${API_BASE}${path}`;

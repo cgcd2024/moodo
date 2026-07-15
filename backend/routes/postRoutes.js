@@ -1,5 +1,6 @@
 import express from "express";
 import { upload } from "../middleware/upload.js";
+import { requireAdmin } from "../middleware/auth.js";
 import {
   getPosts,
   createPost,
@@ -13,9 +14,9 @@ import {
 const router = express.Router();
 
 router.get("/", getPosts);
-router.post("/", upload.single("image"), createPost);
-router.put("/:id", updatePost);
-router.delete("/:id", deletePost);
+router.post("/", requireAdmin, upload.single("image"), createPost);
+router.put("/:id", requireAdmin, updatePost);
+router.delete("/:id", requireAdmin, deletePost);
 router.post("/:id/vote", votePost);
 router.post("/:id/comments", addComment);
 router.post("/:postId/comments/:commentId/like", likeComment);
