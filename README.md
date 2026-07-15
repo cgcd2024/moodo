@@ -66,7 +66,6 @@ sudo certbot --nginx -d muhaha.kr
 - [x] 짤 아래에 tags 추가 (검색 인덱스용, 게시글에는 표기 X) — 모델/관리자 폼/검색 반영 완료
 - [x] 관리자 인증 — 비밀번호 로그인(sessionStorage 유지), 등록/수정/삭제 API는 백엔드에서 x-admin-key 검증. 비밀번호는 backend/.env의 ADMIN_KEY로 변경 가능
 - [ ] 짤 크롤링 수집
-- [ ] SEO 등록을 위한 사이트 제작 https://muhaha.kr/sitemap.xml , https://muhaha.kr/robots.txt
 
 사용자페이지
 - [x] 게시글 수려한 폰트 적용 — Pretendard로 확정
@@ -81,5 +80,5 @@ sudo certbot --nginx -d muhaha.kr
 - [x] MongoDB text 인덱스 교체 — `db.posts.dropIndex("title_text_description_text")` 후 백엔드 재시작
 - [x] SSL 인증서 적용 — `sudo certbot --nginx -d muhaha.kr` (적용 시 모바일 공유 시트 자동 활성화)
 - [ ] 카카오 개발자 앱 생성 + JavaScript 키 발급 — 카카오톡 전용 공유 버튼용
-- [ ] 구글,네이버 검색 엔진 등록
+- [ ] 구글,네이버 검색 엔진 등록 // 메타테그 추가
 - [ ] Open Graph 등록
