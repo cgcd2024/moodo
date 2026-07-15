@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { api, imageUrl } from "./lib/api";
-import Logo from "./components/Logo";
 import PostFormModal from "./components/PostFormModal";
 
 function formatDate(dateStr) {
@@ -67,7 +66,6 @@ export default function AdminApp() {
       <header className="sticky top-0 z-40 w-full flex justify-center bg-[#0f0f13]/80 backdrop-blur-md border-b border-gray-800/60">
         <div className="w-full max-w-5xl px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Logo className="w-9 h-9 transform -rotate-6" />
             <h1 className="text-xl font-black tracking-tight text-white">
               무도<span className="text-yellow-400">짤</span> 관리자
             </h1>

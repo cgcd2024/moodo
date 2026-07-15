@@ -1,25 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- 무도리: 레퍼런스 트레이싱 (색상만 브랜드 노랑으로) -->
-  <!-- 모션 라인 -->
-  <path d="M8 17 L12 21 M13 10.5 L15.5 15.5 M20 7 L21 12.5" stroke="#facc15" stroke-width="2.4" stroke-linecap="round"/>
-  <!-- 왕관 (윤곽선) -->
-  <path d="M39 15 L41 5 L45 9.5 L48.5 3 L52 8.5 L54.5 5.5 L54 14"
-        fill="none" stroke="#facc15" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- 몸통: 머리 + 홈 + 말린 꼬리 (단일 패스) -->
-  <path d="M13.5 35
-           C12.5 31 12 27 13 23.5
-           C15 15.5 22 11.5 30.5 11.5
-           C40.5 11.5 48 18.5 48 28.5
-           C48 36.5 45.5 42 41.5 46
-           C38.5 49 34 51.5 28.5 52.5
-           C25 53.2 21.5 53 20.5 51.5
-           C22.5 49.5 26.5 48 30 46.5
-           C33.5 45 35.5 42.5 35 40
-           C35.5 36 32 33 27.5 33
-           C21 33 15.5 34 13.5 35 Z" fill="#facc15"/>
-  <!-- 눈 -->
-  <circle cx="23" cy="27" r="2.6" fill="#ffffff"/>
-  <circle cx="37.5" cy="29" r="2.6" fill="#ffffff"/>
-  <!-- 점 (기울어진 콤마) -->
-  <ellipse cx="26" cy="58.5" rx="3.6" ry="2.8" fill="#facc15" transform="rotate(-25 26 58.5)"/>
+  <!-- 심플 브랜드 마크: 노란 라운드 사각형 -->
+  <rect x="6" y="6" width="52" height="52" rx="14" fill="#facc15"/>
 </svg>

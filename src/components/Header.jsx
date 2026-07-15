@@ -1,5 +1,3 @@
-import Logo from "./Logo";
-
 export default function Header({ onLogoClick }) {
   return (
     <header className="sticky top-0 z-40 w-full flex justify-center bg-[#0f0f13]/80 backdrop-blur-md border-b border-gray-800/60">
@@ -8,8 +6,6 @@ export default function Header({ onLogoClick }) {
           className="flex items-center gap-2 cursor-pointer group"
           onClick={onLogoClick}
         >
-          <Logo className="w-9 h-9 transform -rotate-6 group-hover:rotate-0 transition-transform duration-300" />
-
           <h1 className="text-xl md:text-2xl font-black tracking-tight text-white">
             무도<span className="text-yellow-400">짤</span> 저장소
           </h1>
