@@ -75,8 +75,8 @@ sudo certbot --nginx -d muhaha.kr
 
 인프라 (서버에서 직접 수행 — 명령어는 위 배포 체크리스트 참고)
 - [x] 도메인 구매 — muhaha.kr (DNS A레코드 연결 확인됨)
-- [ ] nginx 80 전환 — 프론트 빌드(dist) 서빙 + /api,/uploads 프록시 적용, 기존 3000 포트 프로세스 종료
-- [ ] `backend/.env`에 `ADMIN_KEY=새비밀번호` 추가 — 미설정 시 코드 기본값(mudo2026!)이 사용되므로 반드시 변경
-- [ ] MongoDB text 인덱스 교체 — `db.posts.dropIndex("title_text_description_text")` 후 백엔드 재시작
-- [ ] SSL 인증서 적용 — `sudo certbot --nginx -d muhaha.kr` (적용 시 모바일 공유 시트 자동 활성화)
+- [x] nginx 80 전환 — 프론트 빌드(dist) 서빙 + /api,/uploads 프록시 적용, 기존 3000 포트 프로세스 종료
+- [x] `backend/.env`에 `ADMIN_KEY=새비밀번호` 추가 — 미설정 시 코드 기본값(mudo2026!)이 사용되므로 반드시 변경
+- [x] MongoDB text 인덱스 교체 — `db.posts.dropIndex("title_text_description_text")` 후 백엔드 재시작
+- [x] SSL 인증서 적용 — `sudo certbot --nginx -d muhaha.kr` (적용 시 모바일 공유 시트 자동 활성화)
 - [ ] 카카오 개발자 앱 생성 + JavaScript 키 발급 — 카카오톡 전용 공유 버튼용
