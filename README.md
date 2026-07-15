@@ -19,15 +19,15 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 TODO
+3000포트 http 기본포트(80)로 교체
+
 관리자페이지
 -짤 아래에 tags 추가 (db 추가 완료)
  검색 인덱스용으로 실제 post에는 표기 X  
 (ex - 명수옹, 화남, 일하기 싫을때 쓰는 ... etc)
 
-UXUI
+사용자페이지
 -게시글 수려한 폰트적용
+https://freesentation.blog/freesentation
 -mobile 댓글 input focus 수정
-
-
-
-+) 3000포트 http 기본포트로 교체 / 도메인 구매 / ssl 인증서 적용
+-게시물 상단 이미지 복사 or 공유(카카오톡,인스타DM,URL로 복사하기)
