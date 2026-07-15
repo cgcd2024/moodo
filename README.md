@@ -33,17 +33,32 @@ npm install
 npm run dev          # http://localhost:5000
 ```
 
-## 배포 체크리스트
+## 배포 체크리스트 (muhaha.kr)
 
 ```bash
 cd /home/ubuntu/moodo && git pull origin develop
-cd backend && npm install    # multer, sharp 설치
+
+# 백엔드 (포트 5000 유지 — nginx가 프록시)
+cd backend && npm install && cd ..
 # 백엔드 재시작 (pm2 등)
+
+# 프론트: dev 서버 대신 빌드 산출물을 nginx가 서빙
+npm install
+npm run build                # dist/ 생성 — API는 same-origin(/api) 자동
+
+# nginx 설정 (최초 1회) — docs/deploy/nginx-muhaha.kr.conf 참고
+sudo cp docs/deploy/nginx-muhaha.kr.conf /etc/nginx/sites-available/muhaha.kr
+sudo ln -sf /etc/nginx/sites-available/muhaha.kr /etc/nginx/sites-enabled/muhaha.kr
+sudo nginx -t && sudo systemctl reload nginx
+# 기존 3000 포트 프론트 프로세스는 종료
+
+# SSL (80에서 동작 확인 후, 최초 1회)
+sudo certbot --nginx -d muhaha.kr
 ```
 
+- 프론트 빌드는 `VITE_API_URL`을 지정하지 않으면 same-origin(`/api`, `/uploads`)으로 동작 — nginx 프록시 필수. 도메인/HTTPS 전환 시 재빌드 불필요.
 - text 인덱스에 tags가 추가되어 **기존 인덱스를 먼저 삭제**해야 새 인덱스가 생성됨:
   `mongosh> db.posts.dropIndex("title_text_description_text")`
-- HTTPS 적용 시 프론트 빌드에 `VITE_API_URL`을 https 도메인으로 지정할 것 (mixed content 방지)
 
 ## TODO
 
