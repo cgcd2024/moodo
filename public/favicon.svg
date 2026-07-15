@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- 심플 브랜드 마크: 노란 라운드 사각형 -->
-  <rect x="6" y="6" width="52" height="52" rx="14" fill="#facc15"/>
+  <!-- 무도짤 글자 파비콘 -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#facc15"/>
+  <text x="32" y="33.5" text-anchor="middle" dominant-baseline="central" font-family="'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" font-size="18" font-weight="900" fill="#111111">무도짤</text>
 </svg>

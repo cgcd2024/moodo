@@ -70,7 +70,8 @@ sudo certbot --nginx -d muhaha.kr
 사용자페이지
 - [x] 게시글 수려한 폰트 적용 — Pretendard로 확정
 - [x] mobile 댓글 input focus 수정 — input 16px 고정 (iOS 포커스 줌 방지), 모달 모바일 전체화면(dvh)
-- [ ] 게시물 상단 이미지 복사 or 공유 (카카오톡, 인스타DM, URL로 복사하기)
+- [x] 게시물 공유 — 모달 공유 버튼: URL 복사 + Web Share API (HTTPS 적용 시 카카오톡/인스타 포함 OS 공유 시트 자동 활성화), 짤별 딥링크(#/meme/id) 지원
+- [ ] 카카오톡 전용 공유 버튼 — 카카오 개발자 앱 JS 키 발급 필요 (인스타 DM은 공식 API 없음, OS 공유 시트로 갈음)
 
 인프라
 - [ ] 3000포트 http 기본포트(80)로 교체 / 도메인 구매 / SSL 인증서 적용

@@ -64,6 +64,28 @@ export default function MudoApp() {
     fetchMemes();
   }, [fetchMemes]);
 
+  // 공유 딥링크: #/meme/<id>로 진입하면 해당 짤 모달을 연다
+  useEffect(() => {
+    const openFromHash = () => {
+      const match = window.location.hash.match(/^#\/meme\/([0-9a-f]{24})$/i);
+      if (!match) return;
+      const target = memes.find((m) => m._id === match[1]);
+      if (target) setSelectedMeme(target);
+    };
+
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+    return () => window.removeEventListener("hashchange", openFromHash);
+  }, [memes]);
+
+  const handleCloseModal = () => {
+    setSelectedMeme(null);
+    // 딥링크로 열린 상태였다면 주소를 원래대로
+    if (window.location.hash.startsWith("#/meme/")) {
+      history.replaceState(null, "", "#/");
+    }
+  };
+
   const handleRetry = () => {
     setLoading(true);
     setError(false);
@@ -165,7 +187,7 @@ export default function MudoApp() {
       {selectedMeme && (
         <MemeModal
           meme={selectedMeme}
-          onClose={() => setSelectedMeme(null)}
+          onClose={handleCloseModal}
           onUpdateMeme={handleUpdateMeme}
         />
       )}

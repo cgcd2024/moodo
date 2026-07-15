@@ -21,6 +21,7 @@ function timeAgo(dateStr) {
 
 const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   const [newComment, setNewComment] = useState('');
+  const [copied, setCopied] = useState(false);
   // 투표 여부를 localStorage에 기록해 재투표 방지
   const [hasVoted, setHasVoted] = useState(() =>
     localStorage.getItem(`moodo-voted-${meme?._id}`)
@@ -53,6 +54,45 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
   const totalVotes = meme.upvotes + meme.downvotes;
   const upvotePercent = totalVotes === 0 ? 0 : Math.round((meme.upvotes / totalVotes) * 100);
   const downvotePercent = totalVotes === 0 ? 0 : Math.round((meme.downvotes / totalVotes) * 100);
+
+  // 공유: Web Share API(모바일 OS 공유 시트, HTTPS 필요) 우선, 미지원 시 링크 복사
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}${window.location.pathname}#/meme/${meme._id}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `무도짤 저장소 — ${meme.title}`, url: shareUrl });
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") return; // 사용자가 공유 시트를 닫음
+      }
+    }
+
+    // http 환경이나 clipboard API 거부 시에도 동작하는 레거시 복사
+    const legacyCopy = () => {
+      const textarea = document.createElement("textarea");
+      textarea.value = shareUrl;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    };
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      } else {
+        legacyCopy();
+      }
+    } catch {
+      legacyCopy();
+    }
+
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleVote = async (type) => {
     if (hasVoted) return;
@@ -115,9 +155,21 @@ const MemeModal = ({ meme, onClose, onUpdateMeme }) => {
         {/* 헤더 */}
         <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-[#1e1e24]/95 border-b border-gray-700 backdrop-blur">
           <h2 className="text-xl font-bold text-white truncate pr-4">{meme.title}</h2>
-          <button onClick={onClose} className="p-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-colors">
-            <CloseIcon />
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={handleShare}
+              className={`px-3 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+                copied
+                  ? "bg-yellow-400 text-black"
+                  : "bg-gray-700/60 text-gray-200 hover:bg-yellow-400 hover:text-black"
+              }`}
+            >
+              {copied ? "링크 복사됨" : "공유"}
+            </button>
+            <button onClick={onClose} className="p-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded-full transition-colors">
+              <CloseIcon />
+            </button>
+          </div>
         </div>
 
         {/* 본문 콘텐츠 */}
