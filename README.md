@@ -53,7 +53,7 @@ cd backend && npm install    # multer, sharp 설치
 - [ ] 짤 크롤링 수집
 
 사용자페이지
-- [x] 게시글 수려한 폰트 적용 — Pretendard 적용 (대안 후보: [Freesentation](https://freesentation.blog/freesentation))
+- [x] 게시글 수려한 폰트 적용 — Pretendard로 확정
 - [x] mobile 댓글 input focus 수정 — input 16px 고정 (iOS 포커스 줌 방지), 모달 모바일 전체화면(dvh)
 - [ ] 게시물 상단 이미지 복사 or 공유 (카카오톡, 인스타DM, URL로 복사하기)
 

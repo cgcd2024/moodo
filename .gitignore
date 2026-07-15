@@ -24,6 +24,7 @@ backend/.env
 
 # Local
 *.local
+.claude/
 
 # Editor directories and files
 .vscode/*
